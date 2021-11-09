@@ -1,12 +1,18 @@
 <?php
 include 'config/dbdata.php';
 include 'config/connection.php';
+require_once('./Util.php');
 $dbConn =  connect($db);
 /*
   listar todos los posts o solo uno
  */
 if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
+  if(Util::VerifyToken() == false)
+  {
+    echo json_encode(['msg' => 'Error Auth']);
+  }
+  else{
     if (isset($_GET['id']))
     {
       //Mostrar un post
@@ -25,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
       header("HTTP/1.1 200 OK");
       echo json_encode( $sql->fetchAll()  );
       exit();
+    }
 	}
 }
 // Crear un nuevo post

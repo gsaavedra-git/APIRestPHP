@@ -17,11 +17,11 @@ class Auth{
         $rut = $_POST['rut'];
         $pass = $_POST['pass'];
         
-        $sql = $dbConn->prepare("SELECT * FROM usuarios where userrut='".$rut."' and userpassword='".$pass."'");
+        $sql = $dbConn->prepare("SELECT * FROM usuarios where userrut='".$rut."' and userpassword=md5('".$pass."')");
         $sql->execute();
         $sql->setFetchMode(PDO::FETCH_ASSOC);
         $res = $sql->fetchAll();
-        if($res != ''){
+        if(isset($res) && !empty($res)){
             $key = Util::getSecretkey();
             $time = time();
             $payload = [

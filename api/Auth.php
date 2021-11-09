@@ -1,9 +1,9 @@
 <?php
-include('config/dbdata.php');
-include('config/connection.php');
+include('../config/dbdata.php');
+include('../config/connection.php');
 
-require_once('./vendor/firebase/php-jwt/src/JWT.php');
-require_once('./Util.php');
+require_once('../vendor/firebase/php-jwt/src/JWT.php');
+require_once('../util/Util.php');
 
 use Firebase\JWT\JWT as JWT;
 

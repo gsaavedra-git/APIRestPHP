@@ -1,7 +1,7 @@
 <?php
-include 'config/dbdata.php';
-include 'config/connection.php';
-require_once('./Util.php');
+include '../config/dbdata.php';
+include '../config/connection.php';
+require_once('../util/Util.php');
 $dbConn =  connect($db);
 /*
   listar todos los posts o solo uno
@@ -64,16 +64,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 //Borrar
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE')
 {
-	$id = $_GET['id'];
-  $statement = $dbConn->prepare("DELETE FROM cargo where idCargo=:id");
-  $statement->bindValue(':id', $id);
-  $statement->execute();
-	header("HTTP/1.1 200 OK");
-	exit();
+  if(Util::VerifyToken() == false)
+  {
+    echo json_encode(['msg' => 'Error Auth']);
+  }
+  else{
+    $id = $_GET['id'];
+    $statement = $dbConn->prepare("DELETE FROM cargo where idCargo=:id");
+    $statement->bindValue(':id', $id);
+    $statement->execute();
+    header("HTTP/1.1 200 OK");
+    exit();
+  }
 }
 //Actualizar
 if ($_SERVER['REQUEST_METHOD'] == 'PUT')
-{
+{ 
+  if(Util::VerifyToken() == false)
+  {
+    echo json_encode(['msg' => 'Error Auth']);
+  }
+  else{
     $input = $_GET;
     $postId = $input['id'];
     $fields = getParams($input);
@@ -87,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT')
     $statement->execute();
     header("HTTP/1.1 200 OK");
     exit();
+  }
 }
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 header("HTTP/1.1 400 Bad Request");

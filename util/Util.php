@@ -1,7 +1,7 @@
 <?php
 
-require_once('./vendor/firebase/php-jwt/src/JWT.php');
-require_once('./vendor/firebase/php-jwt/src/ExpiredException.php');
+require_once('../vendor/firebase/php-jwt/src/JWT.php');
+require_once('../vendor/firebase/php-jwt/src/ExpiredException.php');
 
 use Firebase\JWT\JWT as JWT;
 use Firebase\JWT\ExpiredException as ExpiredException;

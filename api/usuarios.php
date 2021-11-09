@@ -1,12 +1,18 @@
 <?php
-include 'config/dbdata.php';
-include 'config/connection.php';
+include '../config/dbdata.php';
+include '../config/connection.php';
+require_once('../util/Util.php');
 $dbConn =  connect($db);
 /*
   listar todos los posts o solo uno
  */
 if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
+  if(Util::VerifyToken() == false)
+  {
+    echo json_encode(['msg' => 'Error Auth']);
+  }
+  else{
     if (isset($_GET['id']))
     {
       //Mostrar un post
@@ -25,11 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
       header("HTTP/1.1 200 OK");
       echo json_encode( $sql->fetchAll()  );
       exit();
+    }
 	}
 }
 // Crear un nuevo post
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
+  if(Util::VerifyToken() == false)
+  {
+    echo json_encode(['msg' => 'Error Auth']);
+  }
+  else{
     $input = $_POST;
     $sql = "INSERT INTO usuarios
           (userrut, usernombre, userapellidos, userpassword, usermail, userfono1, userfono2, Cargo_idCargo)
@@ -45,21 +57,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       header("HTTP/1.1 200 OK");
       echo json_encode($input);
       exit();
-	 }
+    }
+	}
 }
 //Borrar
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE')
 {
-	$id = $_GET['id'];
-  $statement = $dbConn->prepare("DELETE FROM usuarios where userrut=:id");
-  $statement->bindValue(':id', $id);
-  $statement->execute();
-	header("HTTP/1.1 200 OK");
-	exit();
+  if(Util::VerifyToken() == false)
+  {
+    echo json_encode(['msg' => 'Error Auth']);
+  }
+  else{
+    $id = $_GET['id'];
+    $statement = $dbConn->prepare("DELETE FROM usuarios where userrut=:id");
+    $statement->bindValue(':id', $id);
+    $statement->execute();
+    header("HTTP/1.1 200 OK");
+    exit();
+  }
 }
 //Actualizar
 if ($_SERVER['REQUEST_METHOD'] == 'PUT')
 {
+  if(Util::VerifyToken() == false)
+  {
+    echo json_encode(['msg' => 'Error Auth']);
+  }
+  else{
     $input = $_GET;
     $postId = $input['id'];
     $fields = getParams($input);
@@ -73,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT')
     $statement->execute();
     header("HTTP/1.1 200 OK");
     exit();
+  }
 }
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 header("HTTP/1.1 400 Bad Request");

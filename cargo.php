@@ -37,6 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 // Crear un nuevo post
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
+  if(Util::VerifyToken() == false)
+  {
+    echo json_encode(['msg' => 'Error Auth']);
+  }
+  else
+  {
     $input = $_POST;
     $sql = "INSERT INTO cargo
           (descCargo, idCargo)
@@ -52,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       header("HTTP/1.1 200 OK");
       echo json_encode($input);
       exit();
-	 }
+	  }
+  }
 }
 //Borrar
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE')
